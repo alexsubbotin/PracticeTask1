@@ -18,8 +18,10 @@ namespace PracticeTask1
 
         static void Main(string[] args)
         {
-            // Getting input string.
-            string input = Console.ReadLine();
+            // Getting input string from the INPUT FILE.
+            StreamReader sr = new StreamReader("INPUT.txt");
+            string input = sr.ReadLine();
+            sr.Close();
 
             // Decomposing into 2 numbers.
             string[] sNum = input.Split(' ');
@@ -34,7 +36,7 @@ namespace PracticeTask1
             // Array of digits in min.
             int[] min = new int[K];
 
-            // Initial value for 1st digit in min.
+            // Initial value for the 1st digit in min.
             min[0] = 1;
 
             for (int i = 0; i < K; i++)
@@ -49,30 +51,30 @@ namespace PracticeTask1
                     S -= 9;
                 }
                 else
-                // If S less than 9
+                // If S less than 9.
                 {
-                    // Adding S
+                    // Adding S.
                     max[i] = S;
 
                     if (i == K - 1)
-                    // If it's the first digit in min
+                    // If it's the first digit in min.
                     {
                         if (S != 0)
-                        // If S is not zero yet then add S
+                        // If S is not zero yet then add S.
                             min[K - i - 1] = S;
                     }
                     else
-                    // If it's not the first digit in min yet
+                    // If it's not the first digit in min yet.
                     {
                         if (S != 0)
-                        // If S is not zero yet then add S - 1
+                        // If S is not zero yet then add S - 1.
                             min[K - i - 1] = S - 1;
                         else
-                        // If S is zero then add zero
+                        // If S is zero then add zero.
                             min[K - i - 1] = S;
                     }
 
-                    // S becomes zero
+                    // S becomes zero.
                     S = 0;
                 }
             }
@@ -86,9 +88,14 @@ namespace PracticeTask1
                 finalMin += min[i].ToString();
             }
 
-            Console.WriteLine(finalMax + " " + finalMin);
+            //Console.WriteLine(finalMax + " " + finalMin);
 
-            Console.ReadLine();
+            // Writing the result to the OUTPUT file.
+            StreamWriter sw = new StreamWriter("OUTPUT.txt");
+            sw.WriteLine(finalMax + " " + finalMin);
+            sw.Close();
+
+            //Console.ReadLine();
         }
     }
 }
