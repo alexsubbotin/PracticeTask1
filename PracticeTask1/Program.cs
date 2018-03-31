@@ -18,10 +18,11 @@ namespace PracticeTask1
 
         static void Main(string[] args)
         {
-            // Getting input string from the INPUT FILE.
+            //Getting input string from the INPUT FILE.
             StreamReader sr = new StreamReader("INPUT.txt");
             string input = sr.ReadLine();
             sr.Close();
+            //string input = Console.ReadLine();
 
             // Decomposing into 2 numbers.
             string[] sNum = input.Split(' ');
@@ -31,6 +32,30 @@ namespace PracticeTask1
             // Getting the number of digits.
             int K = Convert.ToInt32(sNum[1]);
 
+            if (K <= 100 && S <= K * 9)
+            // Checking input numbers just in case
+            {
+
+                string output = GetOutputNumbers(S, K);
+
+                //Console.WriteLine(output);
+
+                // Writing the result to the OUTPUT file.
+                StreamWriter sw = new StreamWriter("OUTPUT.txt");
+                sw.WriteLine(output);
+                sw.Close();
+            }
+            else
+            {
+                Console.WriteLine("Input error!");
+            }
+
+            //Console.ReadLine();
+        }
+
+        // Function that builds output numbers
+        public static string GetOutputNumbers(int S, int K)
+        {
             // Array of digits in max.
             int[] max = new int[K];
             // Array of digits in min.
@@ -60,8 +85,15 @@ namespace PracticeTask1
                     // If it's the first digit in min.
                     {
                         if (S != 0)
-                        // If S is not zero yet then add S.
+                        // If S is not zero yet then add S (else there is initial 1)
                             min[K - i - 1] = S;
+                        else
+                        // If S equals zero.
+                        {
+                            if (min[K - i] == 9)
+                                // If previous equals 9 then it actually should equal 8 (bc there is initial 1 - first digit).
+                                min[K - i] = 8;
+                        }
                     }
                     else
                     // If it's not the first digit in min yet.
@@ -70,8 +102,13 @@ namespace PracticeTask1
                         // If S is not zero yet then add S - 1.
                             min[K - i - 1] = S - 1;
                         else
-                        // If S is zero then add zero.
+                        // If S equals zero.
+                        {
+                            if (min[K - i] == 9)
+                            // If previous equals 9 then it actually should equal 8 (bc there is initial 1 - first digit).
+                                min[K - i] = 8;
                             min[K - i - 1] = S;
+                        }
                     }
 
                     // S becomes zero.
@@ -88,14 +125,7 @@ namespace PracticeTask1
                 finalMin += min[i].ToString();
             }
 
-            //Console.WriteLine(finalMax + " " + finalMin);
-
-            // Writing the result to the OUTPUT file.
-            StreamWriter sw = new StreamWriter("OUTPUT.txt");
-            sw.WriteLine(finalMax + " " + finalMin);
-            sw.Close();
-
-            //Console.ReadLine();
+            return finalMax + " " + finalMin;
         }
     }
 }
