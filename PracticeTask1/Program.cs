@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO; // Library for work with files
+
+namespace PracticeTask1
+{
+    class Program
+    {
+        // The 1st practice task. Student: Alexey Subbotin. Group: SE-17-1.
+
+        // Input data consists of 2 numbers – S and K, K<=100 (Number with K > 20 is bigger than ulong, that's why this program works with strings)
+        // S defines the sum of digits in output numbers, K defines the number of digits in output numbers.
+        // Two output numbers must be the greatest possible and the least possible
+        // It is GUARANTEED that it is possible to get at least ONE output number with S sum and K number of digits.
+
+        static void Main(string[] args)
+        {
+            //Getting input string from the INPUT FILE.
+            StreamReader sr = new StreamReader("INPUT.txt");
+            string input = sr.ReadLine();
+            sr.Close();
+            //string input = Console.ReadLine();
+
+            // Decomposing into 2 numbers.
+            string[] sNum = input.Split(' ');
+
+            // Getting the sum.
+            int S = Convert.ToInt32(sNum[0]);
+            // Getting the number of digits.
+            int K = Convert.ToInt32(sNum[1]);
+
+            if (K <= 100 && S <= K * 9)
+            // Checking input numbers just in case
+            {
+
+                string output = GetOutputNumbers(S, K);
+
+                //Console.WriteLine(output);
+
+                // Writing the result to the OUTPUT file.
+                StreamWriter sw = new StreamWriter("OUTPUT.txt");
+                sw.WriteLine(output);
+                sw.Close();
+            }
+            else
+            {
+                Console.WriteLine("Input error!");
+            }
+
+            //Console.ReadLine();
+        }
+
+        // Function that builds output numbers
+        public static string GetOutputNumbers(int S, int K)
+        {
+            // Array of digits in max.
+            int[] max = new int[K];
+            // Array of digits in min.
+            int[] min = new int[K];
+
+            // Initial value for the 1st digit in min.
+            min[0] = 1;
+
+            for (int i = 0; i < K; i++)
+            // Go through each element in arrays.
+            {
+                if (S / 9 != 0)
+                // If S greater than 9 then add 9s.
+                {
+                    max[i] = 9;
+                    min[K - i - 1] = 9;
+
+                    S -= 9;
+                }
+                else
+                // If S less than 9.
+                {
+                    // Adding S.
+                    max[i] = S;
+
+                    if (i == K - 1)
+                    // If it's the first digit in min.
+                    {
+                        if (S != 0)
+                        // If S is not zero yet then add S (else there is initial 1)
+                            min[K - i - 1] = S;
+                        else
+                        // If S equals zero.
+                        {
+                            if (min[K - i] == 9)
+                                // If previous equals 9 then it actually should equal 8 (bc there is initial 1 - first digit).
+                                min[K - i] = 8;
+                        }
+                    }
+                    else
+                    // If it's not the first digit in min yet.
+                    {
+                        if (S != 0)
+                        // If S is not zero yet then add S - 1.
+                            min[K - i - 1] = S - 1;
+                        else
+                        // If S equals zero.
+                        {
+                            if (min[K - i] == 9)
+                            // If previous equals 9 then it actually should equal 8 (bc there is initial 1 - first digit).
+                                min[K - i] = 8;
+                            min[K - i - 1] = S;
+                        }
+                    }
+
+                    // S becomes zero.
+                    S = 0;
+                }
+            }
+
+            string finalMax = "";
+            string finalMin = "";
+
+            for (int i = 0; i < K; i++)
+            {
+                finalMax += max[i].ToString();
+                finalMin += min[i].ToString();
+            }
+
+            return finalMax + " " + finalMin;
+        }
+    }
+}
